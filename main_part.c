@@ -23,7 +23,7 @@ void integral(double a, double b, double eps2) { // используется м�
     printf("h = %Lf\n", h);
     // посчитаем значение интеграла в каждой рассмотренной точке - сохраним 
     //после это в массив 
-    long double value[n];
+    long double value[n + 1];
     double start = a;
     for (int i = 0; i <= n; ++i) { 
         // пишем value[i] = f(x), где x - нужное значение под шагом
@@ -32,14 +32,22 @@ void integral(double a, double b, double eps2) { // используется м�
         start += h;
     }
     
-    double res1 = value[0] + value[n];
-    
+    long double res1 = value[0] + value[n];
+    long double res2 = res1;
     for (int i = 1; i < n; ++i) {
         if (i % 2 == 1) res1 += 4 * value[i];
         else res1 += 2 * value[i];
     }
+    for (int i = 2; i < n; i += 2) {
+        if (i % 4 == 2) res2 += 4 * value[i];    
+        else res2 += 2 * value[i];
+    }
     res1 *= h / 3;
-    printf("%lf", res1);
+    res2 *= 2 * h / 3;
+    if (fabsl(res2 - res1) / 15 <= eps2) {
+        printf("Calculated correctly\n");
+    }
+    printf("%Lf %Lf", res1, res2);
 }
 
 int main(void) { 
