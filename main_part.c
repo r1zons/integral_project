@@ -28,7 +28,7 @@ void integral(double a, double b, double eps2) { // используется м�
     for (int i = 0; i <= n; ++i) { 
         // пишем value[i] = f(x), где x - нужное значение под шагом
         value[i] = f(start);
-        printf("i = %3d start = %3.4lf %Lf\n", i, start, value[i]);
+        printf("i = %9d start = %9.4lf %9.4Lf\n", i, start, value[i]);
         start += h;
     }
     
@@ -55,4 +55,3 @@ int main(void) {
     integral(a, b, eps);
     return 0;
 }
-
