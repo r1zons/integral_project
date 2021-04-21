@@ -4,12 +4,16 @@
 // TODO
 // - записать функции указателями и передавать их
 
-long double f(long double x) { 
+long double f1(long double x) { 
     return x * x + 4;
 }
 
-long double g(long double x) { 
+long double g1(long double x) { 
     return 3 * x + 1;
+}
+
+long double f(long double x) { 
+    return f1(x) - g1(x);
 }
 
 void root(long double a, long double b, long double eps1) {
@@ -17,7 +21,8 @@ void root(long double a, long double b, long double eps1) {
         a = b - (b - a) * f(b) / (f(b) - f(a));
         b = a - (a - b) * f(a) / (f(a) - f(b));
     }
-    printf("%Lf", b);
+    puts("Root is calculated");
+    printf("%Lf\n", b);
 }
 
 void integral(long double a, long double b, long double eps2) { // используется метод Симпсона
@@ -39,7 +44,7 @@ void integral(long double a, long double b, long double eps2) { // исполь�
     printf("        i              start              value\n");
     for (int i = 0; i <= n; ++i) { 
         // пишем value[i] = f(x), где x - нужное значение под шагом
-        value[i] = f(start);
+        value[i] = f1(start);
         printf("%9d %18.4lf %18.4Lf\n", i, start, value[i]);
         start += h;
     }
@@ -61,12 +66,12 @@ void integral(long double a, long double b, long double eps2) { // исполь�
     if (fabsl(res2 - res1) / 15 <= eps2) {
         printf("Calculated correctly\nDifference less than eps\n");
     }
-    printf("%Lf %Lf", res1, res2);
+    printf("%Lf %Lf\n", res1, res2);
 }
 
 int main(void) { 
     long double a, b, eps; scanf("%Lf%Lf%Lf", &a, &b, &eps);
-    // integral(a, b, eps);
-    // root();
+    integral(a, b, eps);
+    root(a, b, eps);
     return 0;
 }
