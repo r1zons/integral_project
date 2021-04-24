@@ -5,25 +5,26 @@
 // - записать функции указателями и передавать их
 
 long double func1(long double x) { 
-    return x * x + 4;
+    return x * x - 4;
 }
 
 long double func2(long double x) { 
-    return 3 * x + 1;
+    return 3 * x;
 }
 
-// long double f(long double x) { 
-//     return func1(x) - func2(x);
-// }
+long double func3(long double x) { 
+    return func1(x) - func2(x);
+}
 
-// void root(long double a, long double b, long double eps1) {
-//     while (fabsl(b - a) > eps1) { 
-//         a = b - (b - a) * f(b) / (f(b) - f(a));
-//         b = a - (a - b) * f(a) / (f(a) - f(b));
-//     }
-//     puts("Root is calculated");
-//     printf("%Lf\n", b);
-// }
+void root(long double (*f)(long double), long double a, long double b, long double eps) {
+    while (fabsl(b - a) > eps) { 
+        a = b - (b - a) * f(b) / (f(b) - f(a));
+        b = a - (a - b) * f(a) / (f(a) - f(b));
+        printf("%Lf %Lf\n", a, b);
+    }
+    puts("Root is calculated");
+    printf("%Lf\n", b);
+}
 
 void integral(long double (*f) (long double), long double a, long double b, long double eps2) { // используется метод Симпсона
     // оценим шаг интегрирования
@@ -70,8 +71,10 @@ void integral(long double (*f) (long double), long double a, long double b, long
 }
 
 int main(void) { 
-    long double a, b, eps; scanf("%Lf%Lf%Lf", &a, &b, &eps);
-    integral(func2, a, b, eps);
-    // root(a, b, eps);
+    long double a, b, eps; 
+    scanf("%Lf%Lf%Lf", &a, &b, &eps);
+    printf("%Lf %Lf\n", a, b);
+    // integral(func2, a, b, eps);
+    root(func3, a, b, eps);
     return 0;
 }
