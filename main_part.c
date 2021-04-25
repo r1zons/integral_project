@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <math.h>
 
-// TODO
-// - записать функции указателями и передавать их
-
 long double func1(long double x) { 
     return x * x - 4;
 }
@@ -13,14 +10,14 @@ long double func2(long double x) {
 }
 
 long double func3(long double x) { 
-    return func1(x) - func2(x);
+    return 1 / (x + 2);
 }
 
-void root(long double (*f)(long double), long double a, long double b, long double eps) {
+void root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
     while (fabsl(b - a) > eps) { 
-        a = b - (b - a) * f(b) / (f(b) - f(a));
-        b = a - (a - b) * f(a) / (f(a) - f(b));
-        printf("%Lf %Lf\n", a, b);
+        long double t = b;
+        b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
+        a = t;
     }
     puts("Root is calculated");
     printf("%Lf\n", b);
@@ -71,10 +68,10 @@ void integral(long double (*f) (long double), long double a, long double b, long
 }
 
 int main(void) { 
-    long double a, b, eps; 
-    scanf("%Lf%Lf%Lf", &a, &b, &eps);
+    long double a, b, eps1, eps2; 
+    scanf("%Lf%Lf%Lf%Lf", &a, &b, &eps1, &eps2);
     printf("%Lf %Lf\n", a, b);
-    // integral(func2, a, b, eps);
-    root(func3, a, b, eps);
+    integral(func2, a, b, eps1);
+    root(func1, func2, a, b, eps2);
     return 0;
 }
