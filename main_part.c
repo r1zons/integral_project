@@ -70,7 +70,6 @@ void integral(long double (*f) (long double), long double a, long double b, long
 int main(void) { 
     long double a, b, eps1, eps2; 
     scanf("%Lf%Lf%Lf%Lf", &a, &b, &eps1, &eps2);
-    printf("%Lf %Lf\n", a, b);
     integral(func2, a, b, eps1);
     root(func1, func2, a, b, eps2);
     return 0;
