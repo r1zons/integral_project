@@ -2,11 +2,11 @@
 #include <math.h>
 
 long double func1(long double x) { 
-    return x * x - 4;
+    return 0.35 * x * x - 0.95 * x + 2.7;
 }
 
 long double func2(long double x) { 
-    return 3 * x;
+    return 3 * x + 1;
 }
 
 long double func3(long double x) { 
