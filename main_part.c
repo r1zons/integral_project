@@ -23,9 +23,9 @@ void root(long double (*f)(long double), long double (*g)(long double), long dou
     printf("%Lf\n", b);
 }
 
-void integral(long double (*f) (long double), long double a, long double b, long double eps2) { // используется метод Симпсона
+void integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
     // оценим шаг интегрирования
-    long double grade = pow(eps2, 0.25);
+    long double grade = pow(eps, 0.25);
     //long double grade = eps2;
     // прикинем кол-во шагов в разбиении
     int n = ceil((b - a) / grade);
@@ -61,7 +61,7 @@ void integral(long double (*f) (long double), long double a, long double b, long
     res1 *= h / 3;
     res2 *= 2 * h / 3;
     // проверка на правильность по Рунге
-    if (fabsl(res2 - res1) / 15 <= eps2) {
+    if (fabsl(res2 - res1) / 15 <= eps) {
         printf("Calculated correctly\nDifference less than eps\n");
     }
     printf("%Lf %Lf\n", res1, res2);
