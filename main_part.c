@@ -14,6 +14,7 @@ long double func3(long double x) {
 }
 
 void root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
+    // Взяли готовую формулу
     while (fabsl(b - a) > eps) { 
         long double t = b;
         b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
@@ -29,7 +30,7 @@ void integral(long double (*f) (long double), long double a, long double b, long
     //long double grade = eps2;
     // прикинем кол-во шагов в разбиении
     int n = ceil((b - a) / grade);
-    printf("%d\n", n);
+    printf("parts = %d\n", n);
     // округлим до ближайшего целого делящегося на 4 в большую сторону
     n += (4 - (n % 4)) % 4;
     // найдём шаг и двойной шаг - заведём новую переменную
@@ -39,11 +40,11 @@ void integral(long double (*f) (long double), long double a, long double b, long
     //после это в массив 
     long double value[n + 1];
     double start = a;
-    printf("        i              start              value\n");
+    // printf("        i              start              value\n");
     for (int i = 0; i <= n; ++i) { 
         // пишем value[i] = f(x), где x - нужное значение под шагом
         value[i] = f(start);
-        printf("%9d %18.4lf %18.4Lf\n", i, start, value[i]);
+        // printf("%9d %18.4lf %18.4Lf\n", i, start, value[i]);
         start += h;
     }
     
@@ -64,7 +65,7 @@ void integral(long double (*f) (long double), long double a, long double b, long
     if (fabsl(res2 - res1) / 15 <= eps) {
         printf("Calculated correctly\nDifference less than eps\n");
     }
-    printf("%Lf %Lf\n", res1, res2);
+    printf("res1 = %Lf res2 = %Lf\n\n", res1, res2);
 }
 
 int main(void) { 
