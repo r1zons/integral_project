@@ -25,7 +25,7 @@ long double test_root_0(long double x) {            // OX
     return 0;
 }
 
-long double test_root_f1(long double x) {           // x^5 + x - 2 -> https://www.wolframalpha.com/input/?i=real+x%5E5+%2B+x+-+2
+long double test_root_f1(long double x) {           // x = -x -> тут даже вольфрам не нужен
     return x;                                       // рассмотрим промежуток [-10000;10000]
 }
 
@@ -134,13 +134,13 @@ int main(void) {
     test(test_integral_val3, ans_integral_func3, 0.01);
     
     puts("  Root Test Results\n");
-    puts("f(x) = x^5 + x - 2");
+    puts("f(x) = x and g(x) = -x");
     long double test_root_val1 = root(test_root_f1, test_root_g1, -10000, 10000, 0.00001);
     test(test_root_val1, ans_root_func1, 0.00001);
-    puts("f(x) = -x^4 + x^2 - x");
+    puts("f(x) = -x^4 + x^2 - x and OX");
     long double test_root_val2 = root(test_root_f2, test_root_0, -1.5, -1, 0.0001);
     test(test_root_val2, ans_root_func2, 0.0001);
-    puts("f(x) = sqrt(x) + x");
+    puts("f(x) = sqrt(x) + x and OX");
     long double test_root_val3 = root(test_root_f3, test_root_0, 0, 3, 0.000001);
     test(test_root_val3, ans_root_func3, 0.000001);
     
