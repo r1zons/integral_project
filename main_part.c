@@ -1,38 +1,64 @@
 #include <stdio.h>
 #include <math.h>
 
-long double func1(long double x) { 
-    return 0.35 * x * x - 0.95 * x + 2.7;
+// Данные для проверки интеграла - Функция - Доказательство коррекности через вольфрам - правильный ответ
+long double test_integral_func1(long double x) {    // 0.5x^2 - 6 -> https://www.wolframalpha.com/input/?i=integrate+0.5x%5E2+-+6+from+1+to+8
+    return 0.5 * x * x - 6;                         // рассмотрим промежуток [1;8]
 }
 
-long double func2(long double x) { 
-    return 3 * x + 1;
+long double ans_integral_func1 = 43.1667;           // ответ. проверить можно по ссылке выше из test_integral_func1
+
+long double test_integral_func2(long double x) {    // 4x + 3 -> https://www.wolframalpha.com/input/?i=integrate+4x+%2B+3+from+-2000+to+1000
+    return x * 4 + 3;                               // рассмотрим промежуток [-2000;1000]
 }
 
-long double func3(long double x) { 
-    return 1 / (x + 2);
+long double ans_integral_func2 = -5991000;          // ответ. проверить можно по ссылке выше из test_integral_func2
+
+long double test_integral_func3(long double x) {    // e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
+    return pow(M_E, x);                             // рассмотрим промужеток [1;5]
 }
 
-void root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
-    // Взяли готовую формулу
-    while (fabsl(b - a) > eps) { 
-        long double t = b;
-        b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
-        a = t;
-    }
-    puts("Root is calculated");
-    printf("%Lf\n", b);
+long double ans_integral_func3 = 145.69;            // ответ. проверить можно по ссылке выше из test_integral_func1
+
+// Данные для проверки корня - Функция - Доказальство коррекности через вольфрам - правильный ответ
+long double test_root_0(long double x) {            // OX
+    return 0;
 }
 
-void integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
+long double test_root_f1(long double x) {           // x^5 + x - 2 -> https://www.wolframalpha.com/input/?i=real+x%5E5+%2B+x+-+2
+    return x;                                       // рассмотрим промежуток [-10000;10000]
+}
+
+long double test_root_g1(long double x) { 
+    return -x;
+}
+
+long double ans_root_func1 = 0;                     // ответ. проверить можно по ссылке выше из test_root_func1
+
+long double test_root_f2(long double x) {           // -x^4 + x^2 - x -> https://www.wolframalpha.com/input/?i=-x%5E4+%2B+x%5E2+-+x+%3D+0
+    return -pow(x, 4) + x*x - x;                    // рассмотрим промежуток [-1.5; -1.0] - пересечение с OX
+}
+
+long double ans_root_func2 = -1.3247;               // ответ. проверить можно по ссылке выше из test_root_func2
+
+long double test_root_f3(long double x) {           // sqrt(x) + x -> https://www.wolframalpha.com/input/?i=real+sqrt%28x%29+%2B+x
+    return sqrt(x) + x;                             // рассмотрим промужеток [0;3] - пересечение с OX
+}
+
+long double ans_root_func3 = 0;                     // ответ. проверить можно по ссылке выше из test_root_func3
+
+
+long double integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
+    printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
     // оценим шаг интегрирования
     long double grade = pow(eps, 0.25);
     //long double grade = eps2;
     // прикинем кол-во шагов в разбиении
     int n = ceil((b - a) / grade);
-    printf("parts = %d\n", n);
     // округлим до ближайшего целого делящегося на 4 в большую сторону
     n += (4 - (n % 4)) % 4;
+    printf("parts = %d\n", n);
+
     // найдём шаг и двойной шаг - заведём новую переменную
     long double h = (b - a) / n;
     printf("h = %Lf\n", h);
@@ -63,15 +89,60 @@ void integral(long double (*f) (long double), long double a, long double b, long
     res2 *= 2 * h / 3;
     // проверка на правильность по Рунге
     if (fabsl(res2 - res1) / 15 <= eps) {
-        printf("Calculated correctly\nDifference less than eps\n");
+        printf("Calculated correctly - Difference less than eps\n");
     }
-    printf("res1 = %Lf res2 = %Lf\n\n", res1, res2);
+    printf("res1 = %Lf res2 = %Lf\n", res1, res2);
+    return res1;
+}
+
+
+long double root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
+    // Взяли готовую формулу
+    printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
+    int counter = 0;
+    while (fabsl(b - a) > eps) { 
+        counter++;
+        long double t = b;
+        b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
+        a = t;
+    }
+    printf("Root is calculated with %d iterations\n", counter);
+    printf("%Lf\n", b);
+    return b;
+}
+
+
+void test(long double a, long double b, long double eps) { 
+    printf("%Lf", a);
+    if (fabsl(b - a) < eps) 
+        printf(" - answer is correct\n");
+    else
+        printf(" - answer is incorrect, %Lf - is correct\n", b);
+    puts("");
 }
 
 int main(void) { 
-    long double a, b, eps1, eps2; 
-    scanf("%Lf%Lf%Lf%Lf", &a, &b, &eps1, &eps2);
-    integral(func2, a, b, eps1);
-    root(func1, func2, a, b, eps2);
+    puts("  Integral Test Results\n");
+    puts("f(x) = 0.5x^2 - 6");
+    long double test_integral_val1 = integral(test_integral_func1, 1, 8, 0.0001);
+    test(test_integral_val1, ans_integral_func1, 0.0001);
+    puts("f(x) = 4x + 3");
+    long double test_integral_val2 = integral(test_integral_func2, -2000, 1000, 0.0001);
+    test(test_integral_val2, ans_integral_func2, 0.0001);
+    puts("f(x) = e^x");
+    long double test_integral_val3 = integral(test_integral_func3, 1, 5, 0.0001);
+    test(test_integral_val3, ans_integral_func3, 0.01);
+    
+    puts("  Root Test Results\n");
+    puts("f(x) = x^5 + x - 2");
+    long double test_root_val1 = root(test_root_f1, test_root_g1, -10000, 10000, 0.00001);
+    test(test_root_val1, ans_root_func1, 0.00001);
+    puts("f(x) = -x^4 + x^2 - x");
+    long double test_root_val2 = root(test_root_f2, test_root_0, -1.5, -1, 0.0001);
+    test(test_root_val2, ans_root_func2, 0.0001);
+    puts("f(x) = sqrt(x) + x");
+    long double test_root_val3 = root(test_root_f3, test_root_0, 0, 3, 0.000001);
+    test(test_root_val3, ans_root_func3, 0.000001);
+    
     return 0;
 }
