@@ -1,6 +1,6 @@
 section .text
-global test_root_0
-test_root_0:
+global test_root_0_asm
+test_root_0_asm:
     push ebp
     mov ebp, esp
 ;---prolog------------
