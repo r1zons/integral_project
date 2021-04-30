@@ -9,19 +9,17 @@ int SHOW_ROOTCALC_FLAG = 0;
 long double test_integral_func1(long double x) { return 0.5 * x * x - 6; }
 // 0.5x^2 - 6 -> https://www.wolframalpha.com/input/?i=integrate+0.5x%5E2+-+6+from+1+to+8
 // рассмотрим промежуток [1;8]
-long double ans_integral_func1 = 43.1667;           // ответ. проверить можно по ссылке выше из test_integral_func1
-
+long double ans_integral_func1 = 43.1667;
 
 long double test_integral_func2(long double x) { return x * 4 + 3; }
 // 4x + 3 -> https://www.wolframalpha.com/input/?i=integrate+4x+%2B+3+from+-2000+to+1000
 // рассмотрим промежуток [-2000;1000]
-long double ans_integral_func2 = -5991000;          // ответ. проверить можно по ссылке выше из test_integral_func2
-
+long double ans_integral_func2 = -5991000;
 
 long double test_integral_func3(long double x) { return pow(M_E, x); }
 // e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
 // рассмотрим промужеток [1;5]
-long double ans_integral_func3 = 145.69;            // ответ. проверить можно по ссылке выше из test_integral_func1
+long double ans_integral_func3 = 145.69;
 
 // Данные для проверки корня - Функция - Доказальство коррекности через вольфрам - правильный ответ
 long double test_root_0(long double x) { return 0; }            // OX
@@ -30,20 +28,17 @@ long double test_root_f1(long double x) { return x; }
 long double test_root_g1(long double x) { return -x; }
 // x = -x -> тут даже вольфрам не нужен
 // рассмотрим промежуток [-10000;10000]
-long double ans_root_func1 = 0;                     // ответ. проверить можно по ссылке выше из test_root_func1
-
+long double ans_root_func1 = 0;
 
 long double test_root_f2(long double x) { return -pow(x, 4) + x * x - x; }
 // -x^4 + x^2 - x -> https://www.wolframalpha.com/input/?i=-x%5E4+%2B+x%5E2+-+x+%3D+0
 // рассмотрим промежуток [-1.5; -1.0] - пересечение с OX
-long double ans_root_func2 = -1.3247;               // ответ. проверить можно по ссылке выше из test_root_func2
-
+long double ans_root_func2 = -1.3247;
 
 long double test_root_f3(long double x) { return sqrt(x) + x; }
 // sqrt(x) + x -> https://www.wolframalpha.com/input/?i=real+sqrt%28x%29+%2B+x
 // рассмотрим промужеток [0;3] - пересечение с OX
-long double ans_root_func3 = 0;                     // ответ. проверить можно по ссылке выше из test_root_func3
-
+long double ans_root_func3 = 0;
 
 long double integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
     if (SHOW_INTERATION_FLAG) printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
@@ -92,7 +87,6 @@ long double integral(long double (*f) (long double), long double a, long double 
     return res1;
 }
 
-
 long double root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
     // Взяли готовую формулу
     if (SHOW_ROOTCALC_FLAG) {
@@ -112,7 +106,6 @@ long double root(long double (*f)(long double), long double (*g)(long double), l
     return b;
 }
 
-
 void test(long double a, long double b, long double eps) { 
     printf("%Lf", a);
     if (fabsl(b - a) < eps) 
@@ -124,7 +117,6 @@ void test(long double a, long double b, long double eps) {
 
 void help_key(int argc, char *argv[]) {
     puts(""); 
-    // puts("Usage: ./... [-help] [-root] [-int]\n");
     printf("Usage: %s [-help] [-root] [-int]\n\n", argv[0]);
     puts("Options:");
     puts("  -help             Shows usage and option settings.");
