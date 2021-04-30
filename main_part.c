@@ -108,7 +108,7 @@ long double root(long double (*f)(long double), long double (*g)(long double), l
 
 void test(long double a, long double b, long double eps) { 
     printf("%Lf", a);
-    if (fabs(b - a) < eps) 
+    if (fabsl(b - a) < eps) 
         printf(" - answer is correct\n");
     else
         printf(" - answer is incorrect, %Lf - is correct\n", b);
