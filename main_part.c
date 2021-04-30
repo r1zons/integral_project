@@ -1,55 +1,52 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
+
+int SHOW_INTERATION_FLAG = 0;
+int SHOW_ROOTCALC_FLAG = 0;
 
 // Данные для проверки интеграла - Функция - Доказательство коррекности через вольфрам - правильный ответ
-long double test_integral_func1(long double x) {    // 0.5x^2 - 6 -> https://www.wolframalpha.com/input/?i=integrate+0.5x%5E2+-+6+from+1+to+8
-    return 0.5 * x * x - 6;                         // рассмотрим промежуток [1;8]
-}
-
+long double test_integral_func1(long double x) { return 0.5 * x * x - 6; }
+// 0.5x^2 - 6 -> https://www.wolframalpha.com/input/?i=integrate+0.5x%5E2+-+6+from+1+to+8
+// рассмотрим промежуток [1;8]
 long double ans_integral_func1 = 43.1667;           // ответ. проверить можно по ссылке выше из test_integral_func1
 
-long double test_integral_func2(long double x) {    // 4x + 3 -> https://www.wolframalpha.com/input/?i=integrate+4x+%2B+3+from+-2000+to+1000
-    return x * 4 + 3;                               // рассмотрим промежуток [-2000;1000]
-}
 
+long double test_integral_func2(long double x) { return x * 4 + 3; }
+// 4x + 3 -> https://www.wolframalpha.com/input/?i=integrate+4x+%2B+3+from+-2000+to+1000
+// рассмотрим промежуток [-2000;1000]
 long double ans_integral_func2 = -5991000;          // ответ. проверить можно по ссылке выше из test_integral_func2
 
-long double test_integral_func3(long double x) {    // e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
-    return pow(M_E, x);                             // рассмотрим промужеток [1;5]
-}
 
+long double test_integral_func3(long double x) { return pow(M_E, x); }
+// e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
+// рассмотрим промужеток [1;5]
 long double ans_integral_func3 = 145.69;            // ответ. проверить можно по ссылке выше из test_integral_func1
 
 // Данные для проверки корня - Функция - Доказальство коррекности через вольфрам - правильный ответ
-long double test_root_0(long double x) {            // OX
-    return 0;
-}
+long double test_root_0(long double x) { return 0; }            // OX
 
-long double test_root_f1(long double x) {           // x = -x -> тут даже вольфрам не нужен
-    return x;                                       // рассмотрим промежуток [-10000;10000]
-}
-
-long double test_root_g1(long double x) { 
-    return -x;
-}
-
+long double test_root_f1(long double x) { return x; } 
+long double test_root_g1(long double x) { return -x; }
+// x = -x -> тут даже вольфрам не нужен
+// рассмотрим промежуток [-10000;10000]
 long double ans_root_func1 = 0;                     // ответ. проверить можно по ссылке выше из test_root_func1
 
-long double test_root_f2(long double x) {           // -x^4 + x^2 - x -> https://www.wolframalpha.com/input/?i=-x%5E4+%2B+x%5E2+-+x+%3D+0
-    return -pow(x, 4) + x*x - x;                    // рассмотрим промежуток [-1.5; -1.0] - пересечение с OX
-}
 
+long double test_root_f2(long double x) { return -pow(x, 4) + x * x - x; }
+// -x^4 + x^2 - x -> https://www.wolframalpha.com/input/?i=-x%5E4+%2B+x%5E2+-+x+%3D+0
+// рассмотрим промежуток [-1.5; -1.0] - пересечение с OX
 long double ans_root_func2 = -1.3247;               // ответ. проверить можно по ссылке выше из test_root_func2
 
-long double test_root_f3(long double x) {           // sqrt(x) + x -> https://www.wolframalpha.com/input/?i=real+sqrt%28x%29+%2B+x
-    return sqrt(x) + x;                             // рассмотрим промужеток [0;3] - пересечение с OX
-}
 
+long double test_root_f3(long double x) { return sqrt(x) + x; }
+// sqrt(x) + x -> https://www.wolframalpha.com/input/?i=real+sqrt%28x%29+%2B+x
+// рассмотрим промужеток [0;3] - пересечение с OX
 long double ans_root_func3 = 0;                     // ответ. проверить можно по ссылке выше из test_root_func3
 
 
 long double integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
-    printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
+    if (SHOW_INTERATION_FLAG) printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
     // оценим шаг интегрирования
     long double grade = pow(eps, 0.25);
     //long double grade = eps2;
@@ -57,11 +54,11 @@ long double integral(long double (*f) (long double), long double a, long double 
     int n = ceil((b - a) / grade);
     // округлим до ближайшего целого делящегося на 4 в большую сторону
     n += (4 - (n % 4)) % 4;
-    printf("parts = %d\n", n);
+    if (SHOW_INTERATION_FLAG) printf("parts = %d\n", n);
 
     // найдём шаг и двойной шаг - заведём новую переменную
     long double h = (b - a) / n;
-    printf("h = %Lf\n", h);
+    if (SHOW_INTERATION_FLAG) printf("h = %Lf\n", h);
     // посчитаем значение интеграла в каждой рассмотренной точке - сохраним 
     //после это в массив 
     long double value[n + 1];
@@ -98,7 +95,9 @@ long double integral(long double (*f) (long double), long double a, long double 
 
 long double root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
     // Взяли готовую формулу
-    printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
+    if (SHOW_ROOTCALC_FLAG) {
+        printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
+    }
     int counter = 0;
     while (fabsl(b - a) > eps) { 
         counter++;
@@ -106,8 +105,10 @@ long double root(long double (*f)(long double), long double (*g)(long double), l
         b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
         a = t;
     }
-    printf("Root is calculated with %d iterations\n", counter);
-    printf("%Lf\n", b);
+    if (SHOW_ROOTCALC_FLAG) {
+        printf("Root is calculated with %d iterations\n", counter);
+        printf("%Lf\n", b);
+    }
     return b;
 }
 
@@ -121,7 +122,41 @@ void test(long double a, long double b, long double eps) {
     puts("");
 }
 
-int main(void) { 
+void help_key(int argc, char *argv[]) {
+    puts(""); 
+    // puts("Usage: ./... [-help] [-root] [-int]\n");
+    printf("Usage: %s [-help] [-root] [-int]\n\n", argv[0]);
+    puts("Options:");
+    puts("  -help             Shows usage and option settings.");
+    puts("                    Can only be used as first and only option.\n");
+    puts("  -root             Shows amount of iterations during root calculation,");
+    puts("                    boundaries and precision.\n");
+    puts("  -int              Shows amount of parts, that function is divided on,");
+    puts("                    integration boundatries and precision.\n");
+    puts("You can only run using showing options or -help.");
+}
+
+int main(int argc, char *argv[]) { 
+    if (argc > 3) {
+        puts("Wrong usage!");
+        printf("Try %s -help for information\n", argv[0]);
+        return 0;
+    }
+
+    if (argc == 2 && strcmp(argv[1], "-help") == 0) {
+        help_key(argc, argv);
+        return 0;
+    }
+
+    for (int i = 1; i < argc; ++i) {
+        if (SHOW_ROOTCALC_FLAG == 0 && strcmp(argv[i], "-root") == 0) { 
+            SHOW_ROOTCALC_FLAG = 1;
+        }
+        if (SHOW_INTERATION_FLAG == 0 && strcmp(argv[i], "-int") == 0) { 
+            SHOW_INTERATION_FLAG = 1;
+        }
+    }
+
     puts("  Integral Test Results\n");
     puts("f(x) = 0.5x^2 - 6");
     long double test_integral_val1 = integral(test_integral_func1, 1, 8, 0.0001);
