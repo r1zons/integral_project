@@ -5,44 +5,9 @@
 int SHOW_INTERATION_FLAG = 0;
 int SHOW_ROOTCALC_FLAG = 0;
 
-// Данные для проверки интеграла - Функция - Доказательство коррекности через вольфрам - правильный ответ
-long double test_integral_func1(long double x);
-// long double test_integral_func1(long double x) { return 0.5 * x * x - 6; }
-// 0.5x^2 - 6 -> https://www.wolframalpha.com/input/?i=integrate+0.5x%5E2+-+6+from+1+to+8
-// рассмотрим промежуток [1;8]
-long double ans_integral_func1 = 43.1667;
-
-long double test_integral_func2(long double x);
-// long double test_integral_func2(long double x) { return x * 4 + 3; }
-// 4x + 3 -> https://www.wolframalpha.com/input/?i=integrate+4x+%2B+3+from+-2000+to+1000
-// рассмотрим промежуток [-2000;1000]
-long double ans_integral_func2 = -5991000;
-
-// long double test_integral_func3(long double x) { return pow(M_E, x); }
-// // e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
-// // рассмотрим промужеток [1;5]
-// long double ans_integral_func3 = 145.69;
-
-// Данные для проверки корня - Функция - Доказальство коррекности через вольфрам - правильный ответ
-// long double test_root_0(long double x) { return 0; }            // OX
-long double test_root_0(long double x);
-long double test_root_f1(long double x);
-long double test_root_g1(long double x);
-// long double test_root_f1(long double x) { return x; } 
-//long double test_root_g1(long double x) { return -x; }
-// x = -x -> тут даже вольфрам не нужен
-// рассмотрим промежуток [-10000;10000]
-long double ans_root_func1 = 0;
-
-long double test_root_f2(long double x) { return -pow(x, 4) + x * x - x; }
-// -x^4 + x^2 - x -> https://www.wolframalpha.com/input/?i=-x%5E4+%2B+x%5E2+-+x+%3D+0
-// рассмотрим промежуток [-1.5; -1.0] - пересечение с OX
-long double ans_root_func2 = -1.3247;
-
-long double test_root_f3(long double x) { return sqrt(x) + x; }
-// sqrt(x) + x -> https://www.wolframalpha.com/input/?i=real+sqrt%28x%29+%2B+x
-// рассмотрим промужеток [0;3] - пересечение с OX
-long double ans_root_func3 = 0;
+long double f1(long double x); // 0.35x^2 - 0.95x + 2.7
+long double f2(long double x); // 3x + 1
+long double f3(long double x); // 1 / (x + 2)
 
 long double integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
     if (SHOW_INTERATION_FLAG) printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
@@ -93,15 +58,17 @@ long double integral(long double (*f) (long double), long double a, long double 
 
 long double root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
     // Взяли готовую формулу
-    if (SHOW_ROOTCALC_FLAG) {
-        printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
-    }
+    if (SHOW_ROOTCALC_FLAG) printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
     int counter = 0;
     while (fabsl(b - a) > eps) { 
         counter++;
         long double t = b;
         b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
         a = t;
+        if (SHOW_ROOTCALC_FLAG) {
+            printf("a = %Lf\n", a);
+            printf("b = %Lf\n", b);
+        }
     }
     if (SHOW_ROOTCALC_FLAG) {
         printf("Root is calculated with %d iterations\n", counter);
@@ -153,29 +120,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    printf("debug : %Lf\b", test_root_f1(1.0));
-
-    puts("  Integral Test Results\n");
-    puts("f(x) = 0.5x^2 - 6");
-    long double test_integral_val1 = integral(test_integral_func1, 1, 8, 0.0001);
-    test(test_integral_val1, ans_integral_func1, 0.0001);
-    puts("f(x) = 4x + 3");
-    long double test_integral_val2 = integral(test_integral_func2, -2000, 1000, 0.0001);
-    test(test_integral_val2, ans_integral_func2, 0.0001);
-    // puts("f(x) = e^x");
-    // long double test_integral_val3 = integral(test_integral_func3, 1, 5, 0.0001);
-    // test(test_integral_val3, ans_integral_func3, 0.01);
+    long double root_f1_f2_x = root(f1, f2, -10, 5, 0.0001);
+    printf("root of f1 and f2 x = % *.4Lf y1 = % *.4Lf y2 = % *.4Lf\n", 8, root_f1_f2_x, 8, f1(root_f1_f2_x), 8, f2(root_f1_f2_x));
     
-    puts("  Root Test Results\n");
-    puts("f(x) = x and g(x) = -x");
-    long double test_root_val1 = root(test_root_f1, test_root_g1, -10000, 10000, 0.00001);
-    test(test_root_val1, ans_root_func1, 0.00001);
-    puts("f(x) = -x^4 + x^2 - x and OX");
-    long double test_root_val2 = root(test_root_f2, test_root_0, -1.5, -1, 0.0001);
-    test(test_root_val2, ans_root_func2, 0.0001);
-    puts("f(x) = sqrt(x) + x and OX");
-    long double test_root_val3 = root(test_root_f3, test_root_0, 0, 3, 0.000001);
-    test(test_root_val3, ans_root_func3, 0.000001);
+    long double root_f2_f3_x = root(f2, f3, -10, 10, 0.0001);
+    printf("root of f2 and f3 x = % *.4Lf y1 = % *.4Lf y2 = % *.4Lf\n", 8, root_f2_f3_x, 8, f2(root_f2_f3_x), 8, f3(root_f2_f3_x));
+
+    long double root_f1_f3_x = root(f1, f3, -10, 10, 0.0001);
+    printf("root of f1 and f3 x = % *.4Lf y1 = % *.4Lf y3 = % *.4Lf\n", 8, root_f1_f3_x, 8, f1(root_f1_f3_x), 8, f3(root_f1_f3_x));
     
     return 0;
 }

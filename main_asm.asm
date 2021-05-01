@@ -1,93 +1,61 @@
 section .data
-    MINUS       dt -1.0
-    HALF        dt 0.5
+    TWO         dt 2.0
     THREE       dt 3.0
-    FOUR        dt 4.0
-    SIX         dt 6.0
+    CONST_1     dt 0.35
+    CONST_2     dt -0.95
+    CONST_3     dt 2.7
 
 section .text
 
-global test_root_0
-global test_root_f1
-global test_root_g1
-global test_integral_func1
-global test_integral_func2
+GLOBAL f1
+GLOBAL f2
+GLOBAL f3
 
-test_root_0:
+f1:
     push ebp
     mov ebp, esp
 ;---prolog------------
     finit
-    fldz
+    fld tword[CONST_3]  ; 2.7
+    fld tword[CONST_2]  ; 2.7, -0.95
+    fld tword[ebp + 8]  ; 2.7, -0.95, x
+    fmul                ; 2.7, -0.95x
+    fld tword[ebp + 8]  ; 2.7, -0.95x, x
+    fld tword[ebp + 8]  ; 2.7, -0.95x, x, x
+    fmul                ; 2.7, -0.95x, x^2
+    fld tword[CONST_1]  ; 2.7, -0.95x, x^2, 0.35
+    fmul                ; 2.7, -0.95x, 0.35x^2
+    fadd                ; 2.7, 0.35x^2 - 0.95x
+    faddp               ; 0.35x^2 - 0.95x + 2.7
     fstp
 ;---epilog------------
     leave
     ret
 
-test_root_f1:
+f2:
     push ebp
     mov ebp, esp
 ;---prolog------------
     finit
-    fld tword[ebp + 8]
-    fstp
+    fld1                ; 1
+    fld tword[ebp + 8]  ; 1, x
+    fld tword[THREE]    ; 1, x, 3
+    fmul                ; 1, 3x
+    faddp               ; 1 + 3x
 ;---epilog------------
     leave
     ret
 
-test_root_g1:
+f3:
     push ebp
     mov ebp, esp
 ;---prolog------------
     finit
-    fld tword[ebp + 8]
-    fld tword[MINUS]
-    fmulp
-    fstp
-;---epilog------------
-    leave
-    ret
-    
-; test_root_f2:
-;     push ebp
-;     mov ebp, esp
-; ;---prolog------------
-;     finit
-;     fld tword[ebp + 8]
-;     fstp
-; ;---epilog------------
-;     leave
-;     ret
-
-test_integral_func1:
-    push ebp
-    mov ebp, esp
-;---prolog------------
-    finit
-    fld tword[HALF]
-    fld tword[ebp + 8]
-    fld tword[ebp + 8]
-    fmulp
-    fmulp
-    fld tword[SIX]
-    fsubp
-    fstp
-;---epilog------------
-    leave
-    ret
-
-
-test_integral_func2:
-    push ebp
-    mov ebp, esp
-;---prolog------------
-    finit
-    fld tword[THREE]
-    fld tword[FOUR]
-    fld tword[ebp + 8]
-    fmulp
-    faddp
-    fstp
+    fld1                ; 1
+    fld tword[ebp + 8]  ; 1, x
+    fld tword[TWO]      ; 1, x, 2
+    faddp               ; 1, x + 2
+    fdivp               ; 1 / (x + 2)
 ;---epilog------------
     leave
     ret
