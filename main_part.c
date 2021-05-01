@@ -6,26 +6,30 @@ int SHOW_INTERATION_FLAG = 0;
 int SHOW_ROOTCALC_FLAG = 0;
 
 // Данные для проверки интеграла - Функция - Доказательство коррекности через вольфрам - правильный ответ
-long double test_integral_func1(long double x) { return 0.5 * x * x - 6; }
+long double test_integral_func1(long double x);
+// long double test_integral_func1(long double x) { return 0.5 * x * x - 6; }
 // 0.5x^2 - 6 -> https://www.wolframalpha.com/input/?i=integrate+0.5x%5E2+-+6+from+1+to+8
 // рассмотрим промежуток [1;8]
 long double ans_integral_func1 = 43.1667;
 
-long double test_integral_func2(long double x) { return x * 4 + 3; }
+long double test_integral_func2(long double x);
+// long double test_integral_func2(long double x) { return x * 4 + 3; }
 // 4x + 3 -> https://www.wolframalpha.com/input/?i=integrate+4x+%2B+3+from+-2000+to+1000
 // рассмотрим промежуток [-2000;1000]
 long double ans_integral_func2 = -5991000;
 
-long double test_integral_func3(long double x) { return pow(M_E, x); }
-// e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
-// рассмотрим промужеток [1;5]
-long double ans_integral_func3 = 145.69;
+// long double test_integral_func3(long double x) { return pow(M_E, x); }
+// // e^x -> https://www.wolframalpha.com/input/?i=integrate+f%28x%29+%3D+e%5Ex+from+1+to+5
+// // рассмотрим промужеток [1;5]
+// long double ans_integral_func3 = 145.69;
 
 // Данные для проверки корня - Функция - Доказальство коррекности через вольфрам - правильный ответ
-long double test_root_0(long double x) { return 0; }            // OX
-// long double test_root_0(long double x);
-long double test_root_f1(long double x) { return x; } 
-long double test_root_g1(long double x) { return -x; }
+// long double test_root_0(long double x) { return 0; }            // OX
+long double test_root_0(long double x);
+long double test_root_f1(long double x);
+long double test_root_g1(long double x);
+// long double test_root_f1(long double x) { return x; } 
+//long double test_root_g1(long double x) { return -x; }
 // x = -x -> тут даже вольфрам не нужен
 // рассмотрим промежуток [-10000;10000]
 long double ans_root_func1 = 0;
@@ -149,6 +153,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    printf("debug : %Lf\b", test_root_f1(1.0));
+
     puts("  Integral Test Results\n");
     puts("f(x) = 0.5x^2 - 6");
     long double test_integral_val1 = integral(test_integral_func1, 1, 8, 0.0001);
@@ -156,9 +162,9 @@ int main(int argc, char *argv[]) {
     puts("f(x) = 4x + 3");
     long double test_integral_val2 = integral(test_integral_func2, -2000, 1000, 0.0001);
     test(test_integral_val2, ans_integral_func2, 0.0001);
-    puts("f(x) = e^x");
-    long double test_integral_val3 = integral(test_integral_func3, 1, 5, 0.0001);
-    test(test_integral_val3, ans_integral_func3, 0.01);
+    // puts("f(x) = e^x");
+    // long double test_integral_val3 = integral(test_integral_func3, 1, 5, 0.0001);
+    // test(test_integral_val3, ans_integral_func3, 0.01);
     
     puts("  Root Test Results\n");
     puts("f(x) = x and g(x) = -x");
