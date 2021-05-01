@@ -12,7 +12,7 @@ long double f3(long double x); // 1 / (x + 2)
 long double integral(long double (*f) (long double), long double a, long double b, long double eps) { // используется метод Симпсона
     if (SHOW_INTERATION_FLAG) printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
     // оценим шаг интегрирования
-    long double grade = pow(eps, 0.25);
+    long double grade = pow(eps, 0.33);
     //long double grade = eps2;
     // прикинем кол-во шагов в разбиении
     int n = ceil((b - a) / grade);
@@ -27,11 +27,11 @@ long double integral(long double (*f) (long double), long double a, long double 
     //после это в массив 
     long double value[n + 1];
     long double start = a;
-    // printf("        i              start              value\n");
+    if (SHOW_INTERATION_FLAG)  printf("        i            start            value\n");
     for (int i = 0; i <= n; ++i) { 
         // пишем value[i] = f(x), где x - нужное значение под шагом
         value[i] = f(start);
-        // printf("%9d %18.4lf %18.4Lf\n", i, start, value[i]);
+        if (SHOW_INTERATION_FLAG) printf("%9d % *.4Lf % *.4Lf\n", i, 16, start, 16, value[i]);
         start += h;
     }
     
@@ -51,28 +51,30 @@ long double integral(long double (*f) (long double), long double a, long double 
     // проверка на правильность по Рунге
     if (fabsl(res2 - res1) / 15 <= eps) {
         printf("Calculated correctly - Difference less than eps\n");
+    } else {
+        printf("ERROR! Calculated incorrectly - Difference more than eps\n");
     }
-    printf("res1 = %Lf res2 = %Lf\n", res1, res2);
+    printf("res1 = %Lf res2 = %Lf eps = %Lf\n\n", res1, res2, eps);
     return res1;
 }
 
 long double root(long double (*f)(long double), long double (*g)(long double), long double a, long double b, long double eps) {
     // Взяли готовую формулу
-    if (SHOW_ROOTCALC_FLAG) printf("a = %6Lf b = %6Lf eps = %6Lf\n", a, b, eps);
+    if (SHOW_ROOTCALC_FLAG)  {
+        printf("a = %6Lf b = %6Lf eps = %6Lf\n\n", a, b, eps);
+        printf("        i                a                b\n");
+    }
     int counter = 0;
     while (fabsl(b - a) > eps) { 
         counter++;
         long double t = b;
         b = a - (g(a) - f(a)) * (b - a) / (g(b) - f(b) - g(a) + f(a));
         a = t;
-        if (SHOW_ROOTCALC_FLAG) {
-            printf("a = %Lf\n", a);
-            printf("b = %Lf\n", b);
-        }
+        if (SHOW_ROOTCALC_FLAG) printf("%9d % *.4Lf % *.4Lf\n", counter, 16, a, 16, b);
     }
     if (SHOW_ROOTCALC_FLAG) {
         printf("Root is calculated with %d iterations\n", counter);
-        printf("%Lf\n", b);
+        printf("%Lf\n\n", b);
     }
     return b;
 }
@@ -121,13 +123,18 @@ int main(int argc, char *argv[]) {
     }
 
     long double root_f1_f2_x = root(f1, f2, -10, 5, 0.0001);
-    printf("root of f1 and f2 x = % *.4Lf y1 = % *.4Lf y2 = % *.4Lf\n", 8, root_f1_f2_x, 8, f1(root_f1_f2_x), 8, f2(root_f1_f2_x));
+    printf("root of f1 and f2 x = % *.4Lf y1 = % *.4Lf y2 = % *.4Lf\n\n", 8, root_f1_f2_x, 8, f1(root_f1_f2_x), 8, f2(root_f1_f2_x));
     
     long double root_f2_f3_x = root(f2, f3, -10, 10, 0.0001);
-    printf("root of f2 and f3 x = % *.4Lf y1 = % *.4Lf y2 = % *.4Lf\n", 8, root_f2_f3_x, 8, f2(root_f2_f3_x), 8, f3(root_f2_f3_x));
+    printf("root of f2 and f3 x = % *.4Lf y1 = % *.4Lf y2 = % *.4Lf\n\n", 8, root_f2_f3_x, 8, f2(root_f2_f3_x), 8, f3(root_f2_f3_x));
 
     long double root_f1_f3_x = root(f1, f3, -10, 10, 0.0001);
-    printf("root of f1 and f3 x = % *.4Lf y1 = % *.4Lf y3 = % *.4Lf\n", 8, root_f1_f3_x, 8, f1(root_f1_f3_x), 8, f3(root_f1_f3_x));
-    
+    printf("root of f1 and f3 x = % *.4Lf y1 = % *.4Lf y3 = % *.4Lf\n\n", 8, root_f1_f3_x, 8, f1(root_f1_f3_x), 8, f3(root_f1_f3_x));
+        
+    long double ans =   integral(f1, root_f1_f3_x, root_f1_f2_x, 0.0001)
+                       -integral(f3, root_f1_f3_x, root_f2_f3_x, 0.0001)
+                       -integral(f2, root_f2_f3_x, root_f1_f2_x, 0.0001);
+
+    printf("Ans = %Lf\n", ans);
     return 0;
 }
