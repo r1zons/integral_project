@@ -151,6 +151,8 @@ void help_key(char *argv[]) {
     puts("                    boundaries and precision.\n");
     puts("  -int              Shows amount of parts, that function is divided on,");
     puts("                    integration boundatries and precision.\n");
+    puts("  -test             Lanches test mode of program. You can choose functions");
+    puts("                    and test them on prepared tests to check answers.")
     puts("You can only run using showing options or -help.");
 }
 
