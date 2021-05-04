@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-all: test clean
+all: test
 
 clean:
 	rm *.o
