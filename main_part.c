@@ -131,7 +131,7 @@ void test_root() {
         long double ans = root(f1, f2, -2, 1, 0.0001);
         correct(ans, TEST_ROOT_1, 0.0001);
     } else if (test1 == 2 && test2 == 3 || test1 == 3 && test2 == 2) { 
-        long double ans = root(f2, f3, -2, -2, 0.0001);
+        long double ans = root(f2, f3, -1, -2, 0.0001);
         correct(ans, TEST_ROOT_2, 0.0001);
     } else if (test1 == 1 && test2 == 3 || test1 == 3 && test2 == 1) { 
         long double ans = root(f1, f3, -2, 2, 0.0001);
